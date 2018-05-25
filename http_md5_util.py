@@ -33,4 +33,4 @@ def http_post(url, resource, params):
     }
     response = requests.post(url+resource, data=params, headers=headers, timeout=10, proxies=http_proxies)
     data = response.content.decode('utf8')
-    return data
+    return json.loads(data)

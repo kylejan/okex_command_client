@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import json
 import inspect
 import argparse
 from spot_api import OkexSpotApi
@@ -55,4 +56,4 @@ if __name__ == '__main__':
 
     func = getattr(api, args.function)
     response = func(*args.params)
-    print(response)
+    print(json.dumps(response, indent=4))
