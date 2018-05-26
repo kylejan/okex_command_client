@@ -154,3 +154,14 @@ class OkexFutureApi:
         }
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, POSITION_4FIX, params)
+
+    def future_devolve(self, symbol, type, amount):
+        FUTURE_DEVOLVE = "/api/v1/future_devolve.do?"
+        params = {
+            'api_key': self.__apikey,
+            'symbol': symbol,
+            'type': type,
+            'amount': amount
+        }
+        params['sign'] = build_sign(params, self.__secretkey)
+        return http_post(self.__url, FUTURE_DEVOLVE, params)

@@ -78,6 +78,7 @@ if __name__ == '__main__':
         api = future_api
 
     func = getattr(api, args.function)
+    args.params = [str(param) for param in args.params]
     response = func(*args.params)
     responst_str = json.dumps(response, indent=4)
 
