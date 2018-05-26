@@ -10,7 +10,7 @@ class OkexFutureApi:
         self.__apikey = apikey
         self.__secretkey = secretkey
 
-    def ticker(self, symbol, contractType):
+    def future_ticker(self, symbol, contractType):
         TICKER_RESOURCE = "/api/v1/ticker.do"
         params = ''
         if symbol:
@@ -19,7 +19,7 @@ class OkexFutureApi:
             params += '&contract_type=' + contractType if params else 'contract_type=' + symbol
         return http_get(self.__url, TICKER_RESOURCE, params)
 
-    def depth(self, symbol, contractType, size):
+    def future_depth(self, symbol, contractType, size):
         DEPTH_RESOURCE = "/api/v1/depth.do"
         params = ''
         if symbol:
@@ -30,7 +30,7 @@ class OkexFutureApi:
             params += '&size=' + size if params else 'size=' + size
         return http_get(self.__url, DEPTH_RESOURCE, params)
 
-    def trades(self, symbol, contractType):
+    def future_trades(self, symbol, contractType):
         TRADES_RESOURCE = "/api/v1/trades.do"
         params = ''
         if symbol:
@@ -39,7 +39,7 @@ class OkexFutureApi:
             params += '&contract_type=' + contractType if params else 'contract_type=' + symbol
         return http_get(self.__url, TRADES_RESOURCE, params)
 
-    def index(self, symbol):
+    def future_index(self, symbol):
         INDEX = "/api/v1/index.do"
         params = ''
         if symbol:
@@ -50,21 +50,21 @@ class OkexFutureApi:
         EXCHANGE_RATE = "/api/v1/exchange_rate.do"
         return http_get(self.__url, EXCHANGE_RATE, '')
 
-    def estimated_price(self, symbol):
+    def future_estimated_price(self, symbol):
         ESTIMATED_PRICE = "/api/v1/estimated_price.do"
         params = ''
         if symbol:
             params = 'symbol=' + symbol
         return http_get(self.__url, ESTIMATED_PRICE, params)
 
-    def userinfo(self):
+    def future_userinfo(self):
         USERINFO = "/api/v1/userinfo.do?"
         params = {}
         params['api_key'] = self.__apikey
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, USERINFO, params)
 
-    def position(self, symbol, contractType):
+    def future_position(self, symbol, contractType):
         POSITION = "/api/v1/position.do?"
         params = {
             'api_key': self.__apikey,
@@ -74,7 +74,7 @@ class OkexFutureApi:
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, POSITION, params)
 
-    def trade(self, symbol, contractType, price='', amount='', tradeType='', matchPrice='', leverRate=''):
+    def future_trade(self, symbol, contractType, price='', amount='', tradeType='', matchPrice='', leverRate=''):
         TRADE = "/api/v1/trade.do?"
         params = {
             'api_key': self.__apikey,
@@ -90,7 +90,18 @@ class OkexFutureApi:
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, TRADE, params)
 
-    def batch_trade(self, symbol, contractType, orders_data, leverRate):
+    def future_trades_history(self, symbol, date, since):
+        FUTURE_TRADES_HISTORY = "/api/v1/future_trades_history.do?"
+        params = {
+            'api_key': self.__apikey,
+            'symbol': symbol,
+            'date': date,
+            'since': since
+        }
+        params['sign'] = build_sign(params, self.__secretkey)
+        return http_post(self.__url, FUTURE_TRADES_HISTORY, params)
+
+    def future_batch_trade(self, symbol, contractType, orders_data, leverRate):
         BATCH_TRADE = "/api/v1/batch_trade.do?"
         params = {
             'api_key': self.__apikey,
@@ -102,7 +113,7 @@ class OkexFutureApi:
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, BATCH_TRADE, params)
 
-    def cancel(self, symbol, contractType, orderId):
+    def future_cancel(self, symbol, contractType, orderId):
         CANCEL = "/api/v1/cancel.do?"
         params = {
             'api_key': self.__apikey,
@@ -113,7 +124,7 @@ class OkexFutureApi:
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, CANCEL, params)
 
-    def orderinfo(self, symbol, contractType, orderId, status, currentPage, pageLength):
+    def future_orderinfo(self, symbol, contractType, orderId, status, currentPage, pageLength):
         ORDERINFO = "/api/v1/order_info.do?"
         params = {
             'api_key': self.__apikey,
@@ -127,13 +138,13 @@ class OkexFutureApi:
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, ORDERINFO, params)
 
-    def userinfo_4fix(self):
+    def future_userinfo_4fix(self):
         INFO_4FIX = "/api/v1/userinfo_4fix.do?"
         params = {'api_key': self.__apikey}
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, INFO_4FIX, params)
 
-    def position_4fix(self, symbol, contractType, type1):
+    def future_position_4fix(self, symbol, contractType, type1):
         POSITION_4FIX = "/api/v1/position_4fix.do?"
         params = {
             'api_key': self.__apikey,

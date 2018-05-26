@@ -1,12 +1,29 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 import json
 import inspect
 import argparse
+import datetime
+import logging
+import logzero
+from logzero import logger
+from logging.handlers import TimedRotatingFileHandler
 from spot_api import OkexSpotApi
 from future_api import OkexFutureApi
 
+log_directory = './logs'
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
+time_rotating_file_handler = TimedRotatingFileHandler(
+    filename='./logs/okex_{}.log'.format(datetime.datetime.now().strftime('%Y-%m-%d')),
+    when='midnight',
+    encoding='utf8'
+)
+logger.addHandler(time_rotating_file_handler)
+logzero.formatter(logzero.LogFormatter(fmt='[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d] %(message)s'), True)
 
 apikey = ''
 secretkey = ''
@@ -18,6 +35,12 @@ future_api = OkexFutureApi(okex_rest_host,apikey,secretkey)
 
 
 if __name__ == '__main__':
+    config = json.load(open('config.json'))
+    apikey = config['api_key']
+    secretkey = config['secret_key']
+    spot_api = OkexSpotApi(okex_rest_host,apikey,secretkey)
+    future_api = OkexFutureApi(okex_rest_host,apikey,secretkey)
+
     spot_api_functions = [func for func in dir(spot_api) if func[0] != '_']
     future_api_functions = [func for func in dir(future_api) if func[0] != '_']
 
@@ -33,7 +56,7 @@ if __name__ == '__main__':
         func_args = inspect.getargspec(getattr(spot_api, func)).args
         func_parser.add_argument('-params',
             default=[],
-            action='append',
+            nargs='*',
             help=str('parameters: ' + ' '.join(func_args[1::])))
 
     future_parser = sub_parser.add_parser('future', help='future api')
@@ -45,7 +68,7 @@ if __name__ == '__main__':
         func_args = inspect.getargspec(getattr(future_api, func)).args
         func_parser.add_argument('-params',
             default=[],
-            action='append',
+            nargs='*',
             help=str('parameters: ' + ' '.join(func_args[1::])))
 
     args = parser.parse_args()
@@ -56,4 +79,12 @@ if __name__ == '__main__':
 
     func = getattr(api, args.function)
     response = func(*args.params)
-    print(json.dumps(response, indent=4))
+    responst_str = json.dumps(response, indent=4)
+
+    func_params = ''
+    func_param_fields = inspect.getargspec(getattr(api, args.function)).args[1::]
+    for i in range(0, len(args.params)):
+        func_params += '{}={} '.format(func_param_fields[i], args.params[i])
+
+    logger.info('[request] %s %s %s', args.security_type, args.function, func_params)
+    logger.info('[response]\n%s', responst_str)
