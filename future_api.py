@@ -11,7 +11,7 @@ class OkexFutureApi:
         self.__secretkey = secretkey
 
     def future_ticker(self, symbol, contractType):
-        TICKER_RESOURCE = "/api/v1/ticker.do"
+        TICKER_RESOURCE = "/api/v1/future_ticker.do"
         params = ''
         if symbol:
             params += '&symbol=' + symbol if params else 'symbol=' + symbol
@@ -20,7 +20,7 @@ class OkexFutureApi:
         return http_get(self.__url, TICKER_RESOURCE, params)
 
     def future_depth(self, symbol, contractType, size):
-        DEPTH_RESOURCE = "/api/v1/depth.do"
+        DEPTH_RESOURCE = "/api/v1/future_depth.do"
         params = ''
         if symbol:
             params += '&symbol=' + symbol if params else 'symbol=' + symbol
@@ -31,7 +31,7 @@ class OkexFutureApi:
         return http_get(self.__url, DEPTH_RESOURCE, params)
 
     def future_trades(self, symbol, contractType):
-        TRADES_RESOURCE = "/api/v1/trades.do"
+        TRADES_RESOURCE = "/api/v1/future_trades.do"
         params = ''
         if symbol:
             params += '&symbol=' + symbol if params else 'symbol=' + symbol
@@ -40,7 +40,7 @@ class OkexFutureApi:
         return http_get(self.__url, TRADES_RESOURCE, params)
 
     def future_index(self, symbol):
-        INDEX = "/api/v1/index.do"
+        INDEX = "/api/v1/future_index.do"
         params = ''
         if symbol:
             params = 'symbol=' + symbol
@@ -58,14 +58,14 @@ class OkexFutureApi:
         return http_get(self.__url, ESTIMATED_PRICE, params)
 
     def future_userinfo(self):
-        USERINFO = "/api/v1/userinfo.do"
+        USERINFO = "/api/v1/future_userinfo.do"
         params = {}
         params['api_key'] = self.__apikey
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, USERINFO, params)
 
     def future_position(self, symbol, contractType):
-        POSITION = "/api/v1/position.do"
+        POSITION = "/api/v1/future_position.do"
         params = {
             'api_key': self.__apikey,
             'symbol': symbol,
@@ -75,7 +75,7 @@ class OkexFutureApi:
         return http_post(self.__url, POSITION, params)
 
     def future_trade(self, symbol, contractType, price='', amount='', tradeType='', matchPrice='', leverRate=''):
-        TRADE = "/api/v1/trade.do"
+        TRADE = "/api/v1/future_trade.do"
         params = {
             'api_key': self.__apikey,
             'symbol': symbol,
@@ -102,7 +102,7 @@ class OkexFutureApi:
         return http_post(self.__url, FUTURE_TRADES_HISTORY, params)
 
     def future_batch_trade(self, symbol, contractType, orders_data, leverRate):
-        BATCH_TRADE = "/api/v1/batch_trade.do"
+        BATCH_TRADE = "/api/v1/future_batch_trade.do"
         params = {
             'api_key': self.__apikey,
             'symbol': symbol,
@@ -114,7 +114,7 @@ class OkexFutureApi:
         return http_post(self.__url, BATCH_TRADE, params)
 
     def future_cancel(self, symbol, contractType, orderId):
-        CANCEL = "/api/v1/cancel.do"
+        CANCEL = "/api/v1/future_cancel.do"
         params = {
             'api_key': self.__apikey,
             'symbol': symbol,
@@ -125,7 +125,7 @@ class OkexFutureApi:
         return http_post(self.__url, CANCEL, params)
 
     def future_orderinfo(self, symbol, contractType, orderId, status, currentPage, pageLength):
-        ORDERINFO = "/api/v1/order_info.do"
+        ORDERINFO = "/api/v1/future_order_info.do"
         params = {
             'api_key': self.__apikey,
             'symbol': symbol,
@@ -139,13 +139,13 @@ class OkexFutureApi:
         return http_post(self.__url, ORDERINFO, params)
 
     def future_userinfo_4fix(self):
-        INFO_4FIX = "/api/v1/userinfo_4fix.do"
+        INFO_4FIX = "/api/v1/future_userinfo_4fix.do"
         params = {'api_key': self.__apikey}
         params['sign'] = build_sign(params, self.__secretkey)
         return http_post(self.__url, INFO_4FIX, params)
 
     def future_position_4fix(self, symbol, contractType, type1):
-        POSITION_4FIX = "/api/v1/position_4fix.do"
+        POSITION_4FIX = "/api/v1/future_position_4fix.do"
         params = {
             'api_key': self.__apikey,
             'symbol': symbol,
